@@ -1,0 +1,6 @@
+# NPM
+node_modules/
+npm-debug.log
+
+# babel ES5 build
+lib/

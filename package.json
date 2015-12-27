@@ -1,0 +1,40 @@
+{
+  "name": "hut",
+  "version": "0.1.0",
+  "description": "A minimal framework for isomorphic apps with react and redux",
+  "author": "Oscar Korz <okorz001@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/okorz001/hut.git"
+  },
+  "files": [
+    "src",
+    "lib"
+  ],
+  "scripts": {
+    "build": "babel src -d lib -s",
+    "test": "mocha --harmony --compilers js:babel-register"
+  },
+  "dependencies": {
+    "history": "1.x",
+    "koa": "1.x",
+    "koa-router": "5.x",
+    "koa-static-cache": "3.x",
+    "react": "0.14.x",
+    "react-dom": "0.14.x",
+    "react-redux": "4.x",
+    "react-router": "1.x",
+    "redux": "3.x"
+  },
+  "devDependencies": {
+    "babel-cli": "6.x",
+    "babel-preset-es2015-without-regenerator": "1.x",
+    "babel-preset-react": "6.x",
+    "babel-register": "6.x",
+    "chai": "3.x",
+    "cheerio": "0.19.x",
+    "mocha": "2.x",
+    "request": "2.x"
+  }
+}
