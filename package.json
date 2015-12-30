@@ -1,6 +1,6 @@
 {
   "name": "hut",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A minimal framework for isomorphic apps with react and redux",
   "author": "Oscar Korz <okorz001@gmail.com>",
   "license": "MIT",
