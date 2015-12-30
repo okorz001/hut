@@ -41,7 +41,7 @@ export default class HutServer extends Hut {
     app.use(function* () {
       // Bail if something has been rendered already.
       if (!this.body) {
-        self.renderSite(this)
+        yield new Promise((resolve, reject) => self.renderSite(this, resolve))
       }
     })
 
@@ -54,25 +54,25 @@ export default class HutServer extends Hut {
     this.server = null
   }
 
-  renderSite(ctx) {
+  renderSite(ctx, done) {
     match({routes: this.routes, location: ctx.path}, (err, redir, props) => {
       if (err) {
         ctx.status = 500
         ctx.body = `Error: ${err}`
-        return
+        return done()
       }
 
       if (redir) {
         ctx.redirect(redir.pathname)
         ctx.status = 302
         ctx.body = `Moved: ${ctx.path} => ${redir.pathname}`
-        return
+        return done()
       }
 
       if (!props) {
         ctx.status = 404
         ctx.body = `Bad route: ${ctx.path}`
-        return
+        return done()
       }
 
       const store = this.createStore()
@@ -101,6 +101,7 @@ export default class HutServer extends Hut {
       </body>
       </html>
       `
+      return done()
     })
   }
 }

@@ -43,10 +43,15 @@ describe('SmushServer', function () {
     return React.createElement('div', {className: 'bar'})
   }
 
+  function onEnterWait(newState, replaceState, done) {
+    setTimeout(done, 1000)
+  }
+
   const routes = [
     <Route path="/foo" component={Foo} />,
     <Route path="/bar" component={Bar} />,
     <Redirect from="/phoo" to="/foo" />,
+    <Route path="/async" component={Foo} onEnter={onEnterWait} />,
   ]
 
   // Something to return 200 when we are not validating routes.
@@ -104,7 +109,7 @@ describe('SmushServer', function () {
         })
       })
 
-      it('/bar return 200 with <Bar />', function (done) {
+      it('/bar returns 200 with <Bar />', function (done) {
         get('/bar', (err, resp, $) => {
           expect(resp.statusCode).to.be.equal(200)
           expectSelector($, 'body .bar', 1)
@@ -117,6 +122,15 @@ describe('SmushServer', function () {
         get('/phoo', (err, resp, $) => {
           expect(resp.statusCode).to.be.equal(302)
           expect(resp.headers['location']).to.be.equal('/foo')
+          done()
+        })
+      })
+
+      it('/async returns 200 with <Foo /> after delay', function (done) {
+        get('/async', (err, resp, $) => {
+          expect(resp.statusCode).to.be.equal(200)
+          expectSelector($, 'body .foo', 1)
+          expectSelector($, 'body .bar', 0)
           done()
         })
       })
