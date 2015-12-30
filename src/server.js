@@ -36,13 +36,10 @@ export default class HutServer extends Hut {
 
     this.middleware.forEach(mw => app.use(mw))
 
-    const self = this
     // TODO: koa 2.0 passes context instead of binding to this.
+    const self = this
     app.use(function* () {
-      // Bail if something has been rendered already.
-      if (!this.body) {
-        yield new Promise((resolve, reject) => self.renderSite(this, resolve))
-      }
+      yield new Promise((resolve, reject) => self.renderSite(this, resolve))
     })
 
     this.server = createServer(app.callback())
