@@ -77,6 +77,14 @@ is not very useful as it ignores every action, creating a stateless app.
 
 [See redux documentation for more details about reducers.](http://rackt.org/redux/docs/basics/Reducers.html)
 
+#### `reduxMiddleware: array of redux middleware`
+default: `[]`
+
+An array of middleware that is applied directly to the redux createStore as-is,
+and in the specified order.
+
+[See redux documentation for more details about middleware.](http://rackt.org/redux/docs/advanced/Middleware.html)
+
 ### Server
 
 #### `port: integer`

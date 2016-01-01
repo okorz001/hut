@@ -1,6 +1,6 @@
 import React from 'react'
-import {createStore} from 'redux'
 import {Provider} from 'react-redux'
+import {createStore, applyMiddleware} from 'redux'
 
 const defaultRoutes = []
 
@@ -21,10 +21,15 @@ export default class Hut {
 
     // The redux reducer.
     this.reducer = opts.reducer || defaultReducer
+
+    // Array of redux middleware to be applied, in order.
+    this.reduxMiddleware = opts.reduxMiddleware || []
+
+    this._createStore = applyMiddleware.apply(null, this.reduxMiddleware)(createStore)
   }
 
   createStore(initialState) {
-    return this.store = createStore(this.reducer, initialState)
+    return this.store = this._createStore(this.reducer, initialState)
   }
 
   createElement(Component, props) {
