@@ -36,11 +36,11 @@ describe('SmushServer', function () {
   }
 
   function Foo() {
-    return React.createElement('div', {className: 'foo'})
+    return <div className="foo"></div>
   }
 
   function Bar() {
-    return React.createElement('div', {className: 'bar'})
+    return <div className="bar"></div>
   }
 
   function onEnterWait(newState, replaceState, done) {
