@@ -52,7 +52,7 @@ export default class HutServer extends Hut {
   }
 
   renderSite(ctx, done) {
-    match({routes: this.routes, location: ctx.path}, (err, redir, props) => {
+    match({routes: this.routes, location: ctx.url}, (err, redir, props) => {
       if (err) {
         ctx.status = 500
         ctx.body = `Error: ${err}`

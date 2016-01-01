@@ -43,6 +43,10 @@ describe('SmushServer', function () {
     return <div className="bar"></div>
   }
 
+  function Params(props) {
+    return <div data-a={props.params.a} data-b={props.location.query.b}></div>
+  }
+
   function onEnterWait(newState, replaceState, done) {
     setTimeout(done, 1000)
   }
@@ -52,6 +56,7 @@ describe('SmushServer', function () {
     <Route path="/bar" component={Bar} />,
     <Redirect from="/phoo" to="/foo" />,
     <Route path="/async" component={Foo} onEnter={onEnterWait} />,
+    <Route path="/params(/:a)" component={Params} />,
   ]
 
   // Something to return 200 when we are not validating routes.
@@ -216,6 +221,16 @@ describe('SmushServer', function () {
 
         // Request lowercases headers?
         expect(resp.headers['x-poo']).to.be.equal('true')
+        done()
+      })
+    })
+
+    it('supports params and query string in routes', function (done) {
+      get("/params/1?b=2", (err, resp, $) => {
+        expect(resp.statusCode).to.be.equal(200)
+
+        expect($('div').attr('data-a')).to.be.equal('1')
+        expect($('div').attr('data-b')).to.be.equal('2')
         done()
       })
     })
