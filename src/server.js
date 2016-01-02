@@ -73,32 +73,46 @@ export default class HutServer extends Hut {
       }
 
       const store = this.createStore()
-      const app = this.createElement(RoutingContext, props)
 
-      const html = renderToString(app)
-      const title = this.getTitle()
-      const initialState = JSON.stringify(store.getState())
+      // Populate the store before rendering.
+      const promises = []
+      props.routes.forEach(route => {
+        (route.component.actions || []).forEach(action => {
+          promises.push(store.dispatch(action(props)))
+        })
+      })
 
-      ctx.set('Content-Type', 'text/html; charset=utf-8')
-      ctx.body = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta char-set="utf-8">
-        <meta name="viewport" content="width=device-width, user-scalable=no">
-        ${this.scripts}
-        ${this.styles}
-        <title>${title}</title>
-      </head>
-      <body>
-        <section id="${this.mountPoint}">${html}</section>
-        <script type="text/javascript">
-          window.${this.initialState} = ${initialState}
-        </script>
-      </body>
-      </html>
-      `
-      return done()
+      Promise.all(promises).then(() => {
+        const app = this.createElement(RoutingContext, props)
+        const html = renderToString(app)
+        const title = this.getTitle()
+        const initialState = JSON.stringify(store.getState())
+
+        ctx.set('Content-Type', 'text/html; charset=utf-8')
+        ctx.body = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta char-set="utf-8">
+          <meta name="viewport" content="width=device-width, user-scalable=no">
+          ${this.scripts}
+          ${this.styles}
+          <title>${title}</title>
+        </head>
+        <body>
+          <section id="${this.mountPoint}">${html}</section>
+          <script type="text/javascript">
+            window.${this.initialState} = ${initialState}
+          </script>
+        </body>
+        </html>
+        `
+        return done()
+      }, (err) => {
+        ctx.status = 500
+        ctx.body = `Error: ${err}`
+        return done()
+      })
     })
   }
 }
